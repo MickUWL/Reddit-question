@@ -1,0 +1,47 @@
+1. Set up a Centos 7 Desktop PC.
+Should have:
+a. KDE graphical interface which starts up on boot.
+b. Firefox web browser
+c. Konsole terminal emulator.
+d. LibreOffice
+
+(Disregard 2, continue from No.3, this was because I was in an office envirnment - essentially connect to a network printer in the office)
+2. Print out a PDF on an office printer
+
+(Serious Bonus Points if you can get 'Follow Me' printing working on your desktop machine.)
+
+** Using just text tools in a terminal window: **
+
+3. Install the Apache web server on the desktop machine Should be able to do:
+a. Browse the default Apache page on your browser.
+
+4. Create a static web page which describes how you've got on so far with this exercise (it doesn't have to be pretty or graphical, this is just to get you to touch on editing some html code (useful later when you want to place a script in a webpage to do something with input or display table results such as a shopping cart (don't worry about this now, it'll make sense later if you wish to complete my eccomerce website with database backend) and is very very basic - white page with text, if you wanted to be a website creator then thats very different to sysadmin, a sysadmin takes care of the system, not the pretty webpages, although a basic skill in this would be useful when you eventually start making your own monitoring/testing interfaces)
+
+5. Make access to this page encrypted (https://...) using 'LetsEncrypt' certificates Should be able to:
+a. Browse the page from your desktop browser b. Have a green padlock showing that the certificate is installed properly.
+
+6. Using the Apache VirtualServers (google this, its not a VM), use another port, 4445, 
+    to run another encrypted webserver on but this time create 
+    your own Root Certificate and Server certificate, using command line tools. (not as easy as lets encrypt, but very good skill to know how to do)
+Should be able to:
+a. Browse the page from desktop browser
+b. Have a green padlock showing that the certificate is installed properly.
+
+The contents of this page should be a summary of what it takes to achieve 5 and 6 and what resources you used. (any notes or documentation you make should also be held elsewhere on your computer, do not rely on having it on this webserver for now, you'll gain more knowledge and will be able to build something else later, like a self hosted wiki)
+
+7. Create a CGI script (read this server side script, when I completed this part I found it hard to research what a CGI script was! Choose your language, python, php, ruby etc, do your own research here and ask questions on the forum of whats relevant, whats out of date, what is showing to grow in popularity and will be useful in the industry...you don't want to start learning something that is out of date or will be out of date in x years time...I think I used python at this point as I never used any language before...don't worry, its a small task and you don't need to learn lots to do this, hello world is a staple example in the industry for newbies) - for one of your encrypted virtual web servers that prints "Hello World" in your web browser ten times.
+
+8. Create a web form (another CGI script) where you input the weight of a chicken and it tells you how long to cook it for. (google how to make a cooking calculator in whatever language you use...it doens't have to be to cook a chicken, but there is a formula for how long to cook a chicken per weight which you will use here, this is just an example to get you comfortable with server side scripting/scripting in general, you could just as easily create a Bash script for this and run it locally, but wheres the fun in that, you want an interactive webform/script on a website)
+
+9. Store your newly created programming on Github. (upto you, personally I would wait until later when you're more comfortable with general sysadmin tasks and start building better or more interesting things and will use github more often etc)
+
+(You are allowed to use a web browser to search for help and to ask other Linux users for guidance, but you have to do the typing, and type everything, do not copy and paste - this will build muscle memory of commands rather than simply copy/pasting things from verious online resources..it also helps point out simple mistakes like when your pinky keeps hitting the key next to the 1 you actually meant to hit on the keyboard.)
+
+
+Some website to get you going:
+
+http://www.ee.surrey.ac.uk/Teaching/Unix/
+https://www.tldp.org/LDP/Bash-Beginners-Guide/html/index.html
+https://www.digitalocean.com/community/tutorials/apache-basics-installation-and-configuration-troubleshooting
+http://www.eclectica.ca/howto/ssl-cert-howto.php
+https://perlhacks.com/articles/cgi-programming/cgi-programming-part-1/

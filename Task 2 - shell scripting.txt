@@ -1,0 +1,146 @@
+1. Shell scripting
+
+The Bourne shell (i.e. where you type the commands) is on every Linux (and most unix) systems so knowing how to use it is a good idea.
+
+Shells are surprisingly powerful and have a number of built in and associated commands; all of which can be used in the form of a programming language.
+
+Take a look at any file in your /etc/init.d directory. You'll find variables, conditional statements and functions. 
+
+Now you're going to become familiar with a few of the basics. 
+
+This page is likely to be useful: https://www.tldp.org/LDP/Bash-Beginners-Guide/html/
+
+Bash is a more powerful version of the Bourne shell. Bash == Bourne Again SHell. There are a number of other shells with different syntaxes (csh, ksh, zsh, ash) but you're unlikely to meet those in practice (believe it or not zsh has spelling correction!)
+
+So far you'll have used some of the builtins: 'ls', 'cd' and some of the others such as 'more' or 'less' to list the contents of files. There's much, much more.
+
+The 'man' command shows the manual for commands. At this point you could do worse than doing 'man bash' and skim reading it all. I find that, whilst you've no chance of remembering it all, you'll pick up enough so that in the future you'll think to yourself "I think I read something in a man page..." when trying something.
+
+Unix filters are commands which access some data, transform it and output it. 'head', 'tail, 'cat', 'grep', 'sort', 'cut', 'comm' are common ones. Again reading the man pages would be good.
+
+The shell allows for a number of operation commonly found in programming languages, like variables, conditionals, loops, operators, string handling and arithmetic. 
+
+One of the key operators is '|' known as pipe. It can join together filters so that the output of one becomes the input into another (standard output and standard input aka STDIN and STDOUT). There's also STDERR for error output.
+
+e.g. cat file | grep 'something' | cut -d' ' -f1 | sort -u
+
+where the contents of the file are sent to the 'grep' command, which passes the results to the 'cut' command etc etc.
+
+Computers are machines and machine are supposed to make human's lives easier. Going through files looking for things is tedious; editing files and changing lines one at a time is very tedious. These are tools which, if understood, enable you to automate tasks, to do an hours work in a few seconds and give you an air of god-like ability that makes women swoon (maybe not so much).
+
+Exercise 1:
+
+a. List all the files in /var/log which end in '.log'
+
+b. List just the directories in /var/log/
+
+c. List all the files which don't end in '.log'
+
+d. List just the lines from the '/var/log/message' mentioning 'syslog'
+
+e. From log files such as 'secure' or 'auth' extract a list of the usernames (just the usernames) which have attempted to authenticate, de-duplicate them (so the list should only of be unique names) and sort them into alphabetical order. (note that if you use a VM for this, there won't be anything apart from your own logins, using something like AWS will show you the various rogue attempts to access your machine, so probaby best creating an AWS instance, let it run for a day or 2, then attempt this as it will show all the SSH attempts to your instance)
+
+f. (Bonus round) Redo all the above just using the super filters 'sed' and 'awk'.
+
+g. Interactive script which allows you to choose to do any of a-e above, either by passing 'a' through 'e' as a named parameter or by picking from a menu. (a bash script which produces a menu option and will not proceed until your input of a, b, c etc are entered)
+
+h. Using the filter 'find' find all the files on your computer ending in '.log' and copy them to a location of your choosing (so you can work on them safely) - in one command (feel free to use pipe (|) etc
+
+i. Rename all the files with one command so that the '.log' in the name is replaced with '.txt'.
+
+j. Write a script which goes through all the files, find any which are zero length and adds the prefix 'EMPTY-' to their names; any which have the word 'Updated' in them, should be renamed with 'UPDATED-' as a prefix and any which contain 'centos' should have the filename converted to uppercase.
+
+
+
+2. Regular Expressions
+
+Pattern matching is a way to take a line of text, check its contents and, potentially, extract some of it. As you'll probably guess, this is what 'grep' does. The patterns used are called 'regular expressions' or regexes. 
+
+Regexes can be as simple as 'fred' or as complex as you can make them. They can even be recursive but don't ask me how those work.
+
+There are many, many applications for pattern matching and regexes so they are very much worth become familiar with. 
+
+A regex to match an IP address might look like \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3} which is four lots of number between 1 and 3 digits, separated by '.'. Can you see the flaws though? (Hint - look at ip address ranges and think what the output of this regex can produce vs the the highest IP address available)
+
+Virtually every languages, including bourne shell, has some form of pattern matching and most will use exactly the same syntax, so they're nicely portable. You'll also find regexes can be used in text editors and other software.
+
+Exercise 2:
+
+Using your apache logs:
+
+a. Find which files contain entries which have IP addresses in.
+
+b. From one of those files list the lines which have IP addresses in.
+
+c. Extract the IP addresses from those files and sort them by the fourth octet.
+
+d. Using one of the log files with IP addresses in, create a copy *just* using filters (no cp, mv or editors) which is identical but where the IP addresses have been replaced with 'W.X.Y.Z'
+
+e. Replace any double quotes " with single quotes ' and single / with _ (but not //)
+
+f. Replace anything in () and before a ; with '<redacted>'
+
+
+
+3. Syslog
+
+Now that you've got the skills to process data you'll need some data to process. Log files are the most common sort of data that needs munging ('munging' is a technical term for manipulating. See 'automagical' for another technical term meaning "I don't know how the script does it, it just does")
+
+Whilst you could keep manipulating data that's already been written to a disk there are better ways. 
+
+Syslog is a standard and common way of taking logs from a piece of software and doing something with it. Normally the data is organised into a series of files found in /var/log/ but this is just one of many things that a syslog daemon can do.
+
+Take a look at syslog-ng. It's a very powerful syslog processing daemon. One of its features is the ability to send the data to a script of your own choosing. Can you see where this is going?
+
+Yes, you're going to write a script which processes syslog data 'on the fly'.
+
+Exercise 3:
+
+a. Write a script which parses (pattern matches and 'understands') each line of an apache log file. Each field (space delimited, quote or bracket enclosed) should be written out with a description e.g.
+Source IP address: 1.2.3.4
+Command: Get / HTTP/1.1
+User Agent: Mozilla 5.0 (Macintosh ... etc.etc.
+
+b. integrate this into syslog-ng so that these fields are written out to a file with a blank line between each set of fields.
+
+c. Modify the script so that a host name for the IP address is included, if one can be found.
+
+
+
+4. Databases.
+
+So, you can manipulate data through syslog. Putting it in files is a bit 1970s we're going to move up a couple of decades to the 90s and put the data into a database. There are number of candidates to choose from. (MySQL, MariaDB, postgres etc)
+
+Databases come in two general categories: SQL and Not SQL. SQL is what we're after. Sub categories would be relational and non-relational. Relational databases can do complex queries across multiple tables and some really nifty things.
+
+Let's start with MySQL - a relational SQL database. It's not greatly respected but it's *everywhere* so you may as well get used to it. These days it's also known as MariaDB (the original forked into different branches for historical reasons). PostgreSQL is a less popular, but more functional alternative. Oracle is a commercial RDBMS but it's expensive.
+
+Exercise 4:
+
+a. Install MySQL/MariaDB
+
+b. Create a database for syslog data, along with a table with fields for each of the fields in your syslog script
+
+c. modify your syslog-ng script so that it writes its output to the database. At this point it's perfectly reasonable to stop using bash and to use a proper language, like Python, instead.
+
+The end result should be that when you browse a web page on your server, apache logs to its usual files and also sends it to syslog, which passes it to your script, your script parses it and writes data to the database.
+
+d. Once you have some data in your database then you can write queries, in the mysql/mariadb client, to:
+
+  i.    Find records where the IP field has your desktop IP in it.
+  ii.   Find records where it has any other IP address in.
+  iii.  Total number of records in the table.
+  iv.   A list of the unique hostnames, sorted into alphabetical order
+  v.    All except the first dozen records
+  vi.   The top ten largest web pages served.
+  vii.  A list of the versions of AppleWebKit used
+  viii. The total amount of data served
+  
+e. List records using IP addresses from a Class B range. This is much more tricky. You may have to alter the data in the table or add another field. You may also have to write a program which does this as it might be too much to expect from the mysql/mariadb client.
+
+f. Explain why 'e' would have been easier using PostgreSQL.
+
+
+Important Note:
+
+You will have to modify apache so that it sends it logs to syslog. By default it doesn't. This is also a test as to whether you read *all* of these instructions before starting. Exercise 3 will be quite hard if you haven't.

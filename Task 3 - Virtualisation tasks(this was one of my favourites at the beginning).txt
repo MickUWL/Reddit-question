@@ -1,0 +1,45 @@
+Systems:
+
+1. Pick a virtualisation technology that you can run on your desktop machine (xen, vmware, virtualbox, kvm) and install it. Add a brief discussion to your website on why you picked one over the others and the pros/cons. Don’t feel like you have to stick with one if you find it unsuitable after a while but please add to the discussion. (note, you do not have to add it to your website, perhaps start a convo on a forum to help you discuss these)
+
+2. Create a VM which runs a DNS server. Set up a zones (forward and reverse) on the DNS server for your local VMs. Have it cache queries locally. 
+
+3. Pick a configuration management system (salt, puppet, ansible, chef (also lookup the difference between orchestration and configuration management, tools such as terraform are used for orchestration whilst ansible etc will be configuration management, personally I used Teraform along with ESXI and a 3rd party provider module by josenk (see https://github.com/josenk/terraform-provider-esxi) to do this locally, you can obtain ESXI for free without vCenter from VMware, however most official terrafrom provider modules require vCenter...theres a lot to read and get your head around here and I'm not the best person to describe it, I'm happy to talk to you about it though to give a high level overview etc.) (justify it as above - at the end of point 1, discuss it on a forum for guidance) and run it on its own VM. 
+
+4. Reconfigure the DNS server to have its NTP configuration automatically managed using the software picked in 3 (i.e. set the NTP servers which it uses to sync to)
+
+ 
+
+
+Next, your aim is to be able to create a VM in a single action (CLI, click a button) which doesn't require any interaction to manage (i.e. you manage the services via configuration purely on the configuration management system and not by logging into, or otherwise interacting with, the VM). 
+
+4. Using this approach, create a DHCP server which will allocate addresses from a pool on your VM subnet. 
+
+5. Now create a second one and run them as a failover pair sharing the pool.
+
+At this point. You should be able to completely remove the VMs and then recreate them easily with the same DHCP configuration. 
+
+6. For all current (excluding the config management VM) and future VMs you should have the following managed automatically:
+
+a. Users, groups and group membership (I'll admit, at the time I skipped this step, but its worth doing and knowing how to do)
+b. SSH keys allowed to connect without passwords
+c. NTP servers
+d. Firewall
+e. Syslog configuration (i.e. to send syslog to a 'central' syslog server/VM of your own creation)
+f. DNS resolver.
+g. Software should be updated regularly. 
+
+7. Create a syslog server VM.
+
+Thus you should have your user and group on each machine, with your user in the sudo group, able to ssh in without a password. Your machines should be time syncing to a public NTP pool - google this, and a default deny firewall only allowing SSH in. Syslog on each VM should be sending all the usual logs to your syslog server and not logging anything locally. DNS should be resolved by your DNS VM first before sending unknown requests onwards. 
+
+8. Create separate VMs to run the following services:
+
+a. Samba
+b. LDAP
+c. MySQL (or your prefered DB)
+d. FreeRADIUS
+
+(but don't worry about how the services are configured at the moment). 
+
+9. Find the relevant ports for each VMs service and, using the CMS of course, configure each firewall appropriately to allow connections from another VM (which will be acting as a client) by IP address on those ports. i.e. Samba ports on the Samba VM, LDAP on the LDAP VM. 
